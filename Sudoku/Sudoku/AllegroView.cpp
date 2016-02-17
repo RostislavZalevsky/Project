@@ -7,7 +7,7 @@ AllegroView::AllegroView()
 	eventQueue = nullptr;
 	backgroundImage = nullptr;
 	mainFont = nullptr;
-	fpsTimeout = 180;
+	fpsTimeout = 200;
 
 	done = true;
 	draw = true;
@@ -276,10 +276,10 @@ void AllegroView::directionKey(ALLEGRO_EVENT& ev)
 	}
 	else if (ev.type == ALLEGRO_EVENT_TIMER)
 	{
-		pos_y -= keys[UP] * (540 / fpsTimeout);
-		pos_y += keys[DOWN] * (540 / fpsTimeout);
-		pos_x -= keys[LEFT] * (540 / fpsTimeout);
-		pos_x += keys[RIGHT] * (540 / fpsTimeout);
+		pos_y -= keys[UP] * (600 / fpsTimeout);
+		pos_y += keys[DOWN] * (600 / fpsTimeout);
+		pos_x -= keys[LEFT] * (600 / fpsTimeout);
+		pos_x += keys[RIGHT] * (600 / fpsTimeout);
 		if (37.5 < pos_x && 37.5 < pos_y && 712.5 > pos_x && 712.5 > pos_y) {
 			DrawSudoku();
 			DrawRectangle();
@@ -287,6 +287,8 @@ void AllegroView::directionKey(ALLEGRO_EVENT& ev)
 		else {
 			if (37.5 > pos_y) pos_y = 712.5;
 			if (712.5 < pos_y) pos_y = 37.5;
+			if (38 > pos_x) pos_x = 711;
+			if (711 < pos_x) pos_x = 38;
 			DrawSudoku();
 			DrawRectangle();
 		}
