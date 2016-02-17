@@ -287,8 +287,6 @@ void AllegroView::directionKey(ALLEGRO_EVENT& ev)
 		else {
 			if (37.5 > pos_y) pos_y = 712.5;
 			if (712.5 < pos_y) pos_y = 37.5;
-			if (112.5 > pos_y) pos_x = 637.5;
-			if (637.5 < pos_y) pos_x = 112.5;
 			DrawSudoku();
 			DrawRectangle();
 		}
