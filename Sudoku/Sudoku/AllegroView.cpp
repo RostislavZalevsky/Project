@@ -20,6 +20,7 @@ AllegroView::AllegroView()
 	Medium = 25;
 	Hard = 22;
 	Evil = 20;
+	Number = 0;
 }
 
 void AllegroView::Initialize(int width, int height, int r, int g, int b, int Sudoku_table[9][9])
@@ -140,28 +141,20 @@ void AllegroView::DrawSudoku()
 	al_draw_filled_rectangle(487.5, 262.5, 712.5, 487.5, al_map_rgba(45, 45, 45, 0));
 
 	for (double line = 37.5; line <= 712.5; line += 75) {
-		al_draw_line(36.25, line, 713.75, line, al_map_rgb(0, 128, 255), 2.5);
-		al_draw_line(line, 36.25, line, 713.75, al_map_rgb(0, 128, 255), 2.5);
+		al_draw_line(36, line, 714, line, al_map_rgb(0, 128, 255), 2);
+		al_draw_line(line, 36, line, 714, al_map_rgb(0,128, 255), 2);
 	}
 	for (double line = 37.5; line <= 712.5; line += 225) {
-		al_draw_line(35, line, 715, line, al_map_rgb(255, 0, 0), 5);
-		al_draw_line(line, 35, line, 715, al_map_rgb(255, 0, 0), 5);
+		al_draw_line(35, line, 715, line, al_map_rgb(255, 0, 128), 5);
+		al_draw_line(line, 35, line, 715, al_map_rgb(255, 0, 128), 5);
 	}
-	for (int h_t = 1;h_t <= 9;h_t++) {
-		for (int w_t = 1;w_t <= 9;w_t++) {
-			if (0 != Sudoku_Num[w_t - 1][h_t - 1]) {
-				char str[2];
-				_itoa_s(Sudoku_Num[w_t - 1][h_t - 1], str, 10);
-				al_draw_text(mainFont, al_map_rgb(0, 255, 128), w_t * 75 - 18.75, h_t * 75 - 37.5, 0, str);
-			}
-		}
-	}
+	drawText();
 }
 
 void AllegroView::DrawRectangle()
 {
-	for (double i = 37.5; i <= height - 75; i += 75) {
-		for (double j = 37.5; j < width - 75; j += 75)
+	for (double i = 37.5; i <= height - 37.5; i += 75) {
+		for (double j = 37.5; j < width - 37.5; j += 75)
 		{
 			if (pos_x >= j && pos_x <= j + 75 && pos_y >= i && pos_y <= i + 75) {
 				int x1 = pos_x, y1 = pos_y;
@@ -172,15 +165,7 @@ void AllegroView::DrawRectangle()
 				al_draw_filled_rectangle(pos_x, pos_y, pos_x + 75, pos_y + 75, al_map_rgba(103, 103, 103, 0));
 				pos_x = x1;
 				pos_y = y1;
-				for (int h_t = 1;h_t <= 9;h_t++) {
-					for (int w_t = 1;w_t <= 9;w_t++) {
-						if (0 != Sudoku_Num[w_t - 1][h_t - 1]) {
-							char str[2];
-							_itoa_s(Sudoku_Num[w_t - 1][h_t - 1], str, 10);
-							al_draw_text(mainFont, al_map_rgb(0, 255, 128), w_t * 75 - 18.75, h_t * 75 - 37.5, 0, str);
-						}
-					}
-				}
+				drawText();
 			}
 		}
 	}
@@ -188,14 +173,56 @@ void AllegroView::DrawRectangle()
 
 void AllegroView::SetNum()
 {
+	for (double i = 37.5; i <= height - 75; i += 75) {
+		for (double j = 37.5; j < width - 75; j += 75)
+		{
+			if (pos_x >= j && pos_x <= j + 75 && pos_y >= i && pos_y <= i + 75) {
+				int x1 = pos_x, y1 = pos_y;
+				pos_x = j;
+				pos_y = i;
+				int x = pos_x / 75, y = pos_y / 75;
+				if (Sudoku_Num[x][y] == 0 && Sudoku_Num1[x][y] != Sudoku_table[x][y]) {
+					Sudoku_Num1[x][y] = Number;
+				}
+				pos_x = x1;
+				pos_y = y1;
+				DrawRectangle();
+			}
+		}
+	}
+}
+
+void AllegroView::drawText()
+{
+	for (int h_t = 1;h_t <= 9;h_t++) {
+		for (int w_t = 1;w_t <= 9;w_t++) {
+			if (0 != Sudoku_Num[w_t - 1][h_t - 1]) {//yellow_TEXT
+				char str[2];
+				_itoa_s(Sudoku_Num[w_t - 1][h_t - 1], str, 10);
+				al_draw_text(mainFont, al_map_rgb(255, 255, 255), w_t * 75 - 18.75, h_t * 75 - 37.5, 0, str);
+			}
+			if (0 != Sudoku_Num1[w_t - 1][h_t - 1] && Sudoku_Num1[w_t - 1][h_t - 1] == Sudoku_table[w_t - 1][h_t - 1]) {//green_TEXT
+				char str[2];
+				_itoa_s(Sudoku_Num1[w_t - 1][h_t - 1], str, 10);
+				al_draw_text(mainFont, al_map_rgb(0, 255, 0), w_t * 75 - 18.75, h_t * 75 - 37.5, 0, str);
+			}
+			if (0 != Sudoku_Num1[w_t - 1][h_t - 1] && Sudoku_Num1[w_t - 1][h_t - 1] != Sudoku_table[w_t - 1][h_t - 1]) {//red_TEXT
+				char str[2];
+				_itoa_s(Sudoku_Num1[w_t - 1][h_t - 1], str, 10);
+				al_draw_text(mainFont, al_map_rgb(255, 0, 0), w_t * 75 - 18.75, h_t * 75 - 37.5, 0, str);
+			}
+		}
+	}
 }
 
 void AllegroView::AddNum()
 {
 	srand(time(NULL));//number
 	for (int x = 0; x < 9; x++)
-		for (int y = 0; y < 9; y++)
+		for (int y = 0; y < 9; y++) {
 			Sudoku_Num[x][y] = 0;
+			Sudoku_Num1[x][y] = 0;
+		}
 	int i = 0; 
 	while (i < Basic) {
 		int x, y;
@@ -281,7 +308,6 @@ void AllegroView::directionKey(ALLEGRO_EVENT& ev)
 		pos_x -= keys[LEFT] * (600 / fpsTimeout);
 		pos_x += keys[RIGHT] * (600 / fpsTimeout);
 		if (37.5 < pos_x && 37.5 < pos_y && 712.5 > pos_x && 712.5 > pos_y) {
-			DrawSudoku();
 			DrawRectangle();
 		}
 		else {
@@ -289,7 +315,6 @@ void AllegroView::directionKey(ALLEGRO_EVENT& ev)
 			if (712.5 < pos_y) pos_y = 37.5;
 			if (38 > pos_x) pos_x = 711;
 			if (711 < pos_x) pos_x = 38;
-			DrawSudoku();
 			DrawRectangle();
 		}
 	}
@@ -297,41 +322,36 @@ void AllegroView::directionKey(ALLEGRO_EVENT& ev)
 void AllegroView::directionNKey(ALLEGRO_EVENT & ev)
 {
 	switch (ev.keyboard.keycode) {
+	case ALLEGRO_KEY_DELETE:
+	case ALLEGRO_KEY_PAD_0:
+	case ALLEGRO_KEY_0:	Number = 0, SetNum();
+		break;
 	case ALLEGRO_KEY_PAD_1:
-	case ALLEGRO_KEY_1:
-		
+	case ALLEGRO_KEY_1:	Number = 1,	SetNum();
 		break;
 	case ALLEGRO_KEY_PAD_2:
-	case ALLEGRO_KEY_2:
-
+	case ALLEGRO_KEY_2:Number = 2, SetNum();
 		break;
 	case ALLEGRO_KEY_PAD_3:
-	case ALLEGRO_KEY_3:
-
+	case ALLEGRO_KEY_3:Number = 3, SetNum();
 		break;
 	case ALLEGRO_KEY_PAD_4:
-	case ALLEGRO_KEY_4:
-
+	case ALLEGRO_KEY_4:Number = 4, SetNum();
 		break;
 	case ALLEGRO_KEY_PAD_5:
-	case ALLEGRO_KEY_5:
-
+	case ALLEGRO_KEY_5:Number = 5, SetNum();
 		break;
 	case ALLEGRO_KEY_PAD_6:
-	case ALLEGRO_KEY_6:
-
+	case ALLEGRO_KEY_6:Number = 6, SetNum();
 		break;
 	case ALLEGRO_KEY_PAD_7:
-	case ALLEGRO_KEY_7:
-
+	case ALLEGRO_KEY_7:Number = 7, SetNum();
 		break;
 	case ALLEGRO_KEY_PAD_8:
-	case ALLEGRO_KEY_8:
-
+	case ALLEGRO_KEY_8:Number = 8, SetNum();
 		break;
 	case ALLEGRO_KEY_PAD_9:
-	case ALLEGRO_KEY_9:
-		
+	case ALLEGRO_KEY_9:Number = 9, SetNum();
 		break;
 	}
 }

@@ -25,12 +25,15 @@ class AllegroView
 
 	int Sudoku_table[9][9];
 	int Sudoku_Num[9][9];
+	int Sudoku_Num1[9][9];
 
 	int Basic;
 	int	Easy;
 	int	Medium;
 	int	Hard;
 	int	Evil;
+
+	int Number;
 public:
 	AllegroView();
 	void Initialize(int width, int height, int r, int g, int b, int Sudoku_table[9][9]);
@@ -40,6 +43,7 @@ public:
 	void DrawSudoku();
 	void DrawRectangle();
 	void SetNum();
+	void drawText();
 
 	void AddNum();
 	void directionMouse(ALLEGRO_EVENT& ev);
