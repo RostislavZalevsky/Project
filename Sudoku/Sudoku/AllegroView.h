@@ -2,6 +2,7 @@
 #include "AllegroHeader.h"
 #include "Header.h"
 #include "GameSudoku.h"
+#include "ConsoleView.h"
 
 class AllegroView
 {
@@ -10,7 +11,7 @@ class AllegroView
 	ALLEGRO_EVENT_QUEUE *eventQueue;
 	ALLEGRO_COLOR backgroundColor;
 	ALLEGRO_BITMAP *backgroundImage;
-	ALLEGRO_FONT *mainFont;
+	ALLEGRO_FONT *mainFont, *lifeFont, *welFont, *wel1Font;
 	bool done;//while
 
 	int width;//screen
@@ -34,9 +35,14 @@ class AllegroView
 	int	Evil;
 
 	int Number;
+	int life;
+
+	Console s;
 public:
 	AllegroView();
 	void Initialize(int width, int height, int r, int g, int b, int Sudoku_table[9][9]);
+	void Welcome();
+	void CoreWelcome();
 	void Game(AllegroView *Sudoku);
 
 
@@ -44,6 +50,7 @@ public:
 	void DrawRectangle();
 	void SetNum();
 	void drawText();
+	void DrawLife();
 
 	void AddNum();
 	void directionMouse(ALLEGRO_EVENT& ev);

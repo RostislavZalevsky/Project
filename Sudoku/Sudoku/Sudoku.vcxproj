@@ -159,12 +159,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AllegroView.cpp" />
+    <ClCompile Include="ConsoleView.cpp" />
     <ClCompile Include="GameSudoku.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AllegroHeader.h" />
     <ClInclude Include="AllegroView.h" />
+    <ClInclude Include="ConsoleView.h" />
     <ClInclude Include="GameSudoku.h" />
     <ClInclude Include="Header.h" />
   </ItemGroup>

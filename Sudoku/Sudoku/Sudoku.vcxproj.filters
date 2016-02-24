@@ -30,6 +30,9 @@
     <ClCompile Include="GameSudoku.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="ConsoleView.cpp">
+      <Filter>Заголовочные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h">
@@ -43,6 +46,9 @@
     </ClInclude>
     <ClInclude Include="GameSudoku.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsoleView.h">
+      <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

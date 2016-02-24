@@ -2,18 +2,12 @@
 
 AllegroView::AllegroView()
 {
-	display = nullptr;
-	timer = nullptr;
-	eventQueue = nullptr;
-	backgroundImage = nullptr;
-	mainFont = nullptr;
+	display = nullptr,	timer = nullptr, eventQueue = nullptr, backgroundImage = nullptr, mainFont = nullptr, lifeFont = nullptr, welFont = nullptr, wel1Font = nullptr;
 	fpsTimeout = 200;
 
-	done = true;
-	draw = true;
+	draw = done = true;
 
-	pos_x = 338;
-	pos_y = 338;
+	pos_x = pos_y = 338;
 
 	Basic = 40;
 	Easy = 30;
@@ -21,6 +15,7 @@ AllegroView::AllegroView()
 	Hard = 22;
 	Evil = 20;
 	Number = 0;
+	life = 5;
 }
 
 void AllegroView::Initialize(int width, int height, int r, int g, int b, int Sudoku_table[9][9])
@@ -71,11 +66,12 @@ void AllegroView::Initialize(int width, int height, int r, int g, int b, int Sud
 	AddNum();
 
 	mainFont = al_load_font("Resources/Fonts/AdobeFanHeitiStd-Bold.otf", 75, 0);
+	lifeFont = al_load_font("Resources/Fonts/AdobeFanHeitiStd-Bold.otf", 18.75, 0);
+	welFont = al_load_font("Resources/Fonts/HARLOWSI.ttf", 100, 0);
+	wel1Font = al_load_font("Resources/Fonts/comicz.ttf", 50, 0);
+	
 	//al_set_target_bitmap(al_get_backbuffer(display));
-	backgroundColor.r = r;
-	backgroundColor.g = g;
-	backgroundColor.b = b;
-	backgroundColor.a = 0;
+	backgroundColor.r = r, backgroundColor.g = g, backgroundColor.b = b, backgroundColor.a = 0;
 
 	DrawSudoku();//eventQueue = al_create_event_queue();
 
@@ -88,6 +84,43 @@ void AllegroView::Initialize(int width, int height, int r, int g, int b, int Sud
 	al_register_event_source(eventQueue, al_get_keyboard_event_source());//keyboard
 	al_register_event_source(eventQueue, al_get_mouse_event_source());//mouse
 }
+void AllegroView::Welcome()
+{
+	ALLEGRO_EVENT ev;
+	bool done1 = true;
+	while (done1) {
+		al_wait_for_event(eventQueue, &ev);
+		if (ev.type == ALLEGRO_EVENT_TIMER && al_is_event_queue_empty(eventQueue)) al_flip_display();
+		switch (ev.keyboard.keycode) {																			
+		case ALLEGRO_KEY_ESCAPE:																				
+			done1 = false;
+			done = false;
+			break;																								
+		}
+		if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {															
+			done1 = false;
+			done = false;
+			break;																								
+		}
+		al_set_target_bitmap(al_get_backbuffer(display));
+		al_draw_bitmap(backgroundImage, 0, 0, 0);
+		al_init_primitives_addon();
+		al_draw_text(welFont, al_map_rgb(255, 255, 255), 375, 75, ALLEGRO_ALIGN_CENTRE, "Welcome!");
+		al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 225, ALLEGRO_ALIGN_CENTRE, "Resume Game");
+		al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 300, ALLEGRO_ALIGN_CENTRE, "New Game");
+		al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 375, ALLEGRO_ALIGN_CENTRE, "Exit Game");
+		/*
+		Resume Game
+New Game
+Exit Game
+*/
+
+	}
+}
+void AllegroView::CoreWelcome()
+{
+	
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -98,22 +131,19 @@ void AllegroView::Game(AllegroView * Sudoku)																	///////////////////
 {																												////////////////////
 	al_start_timer(timer);																						////////////////////
 	ALLEGRO_EVENT ev;																							////////////////////
-																												////////////////////
+	//Welcome();																									////////////////////
 	while (done) {																								////////////////////
 		al_wait_for_event(eventQueue, &ev);																		////////////////////
 																												////////////////////
-		if (ev.type == ALLEGRO_EVENT_TIMER && al_is_event_queue_empty(eventQueue)) {							////////////////////
-			al_flip_display();																					////////////////////
-		}																										////////////////////
+		if (ev.type == ALLEGRO_EVENT_TIMER && al_is_event_queue_empty(eventQueue)) al_flip_display();			////////////////////
+																												////////////////////
 		switch (ev.keyboard.keycode) {																			////////////////////
 		case ALLEGRO_KEY_ESCAPE:																				////////////////////
 			done = false;																						////////////////////
 			break;																								////////////////////
 		}																										////////////////////
 																												////////////////////
-		directionKey(ev);																						////////////////////
-		directionMouse(ev);																						////////////////////
-		directionNKey(ev);																						////////////////////
+		directionKey(ev), directionMouse(ev), directionNKey(ev);												////////////////////
 																												////////////////////
 		if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {															////////////////////
 			done = false;																						////////////////////
@@ -148,48 +178,61 @@ void AllegroView::DrawSudoku()
 		al_draw_line(35, line, 715, line, al_map_rgb(255, 0, 128), 5);
 		al_draw_line(line, 35, line, 715, al_map_rgb(255, 0, 128), 5);
 	}
+	DrawLife();
 	drawText();
 }
 
 void AllegroView::DrawRectangle()
 {
-	for (double i = 37.5; i <= height - 37.5; i += 75) {
+	for (double i = 37.5; i < height - 37.5; i += 75)
 		for (double j = 37.5; j < width - 37.5; j += 75)
 		{
 			if (pos_x >= j && pos_x <= j + 75 && pos_y >= i && pos_y <= i + 75) {
 				int x1 = pos_x, y1 = pos_y;
-				pos_x = j;
-				pos_y = i;
-				DrawSudoku();	//al_hide_mouse_cursor(display);
-				cout << x1 << " " << y1 << endl;
-				al_draw_filled_rectangle(pos_x, pos_y, pos_x + 75, pos_y + 75, al_map_rgba(103, 103, 103, 0));
-				pos_x = x1;
-				pos_y = y1;
+				pos_x = j, pos_y = i;
+				int x = (pos_x + 37.5) / 75, y = (pos_y + 37.5) / 75;
+				s.GotoXY(0, 14);cout << "[" << x << "]" << " " << "[" << y << "]";
+				DrawSudoku(); //al_hide_mouse_cursor(display);
+				for (double i = 37.5; i < height - 37.5; i += 75) {
+					for (double j = 37.5; j < width - 37.5; j += 75) {
+						int x2 = (j - 37.5) / 75, y2 = (i - 37.5) / 75;
+						if ((Sudoku_Num1[x][y] == Sudoku_table[x][y] || Sudoku_Num[x][y] == Sudoku_table[x][y]) && (Sudoku_Num1[x2][y2] != 0 || Sudoku_Num[x2][y2] != 0) && (Sudoku_Num1[x2][y2] == Sudoku_table[x][y] || Sudoku_Num[x2][y2] == Sudoku_table[x][y])) {
+							al_draw_filled_rectangle(j, i, j + 75, i + 75, al_map_rgba(100, 100, 100, 0));
+						}
+					}
+				}
+				if ((Sudoku_Num1[x][y] == 0 && Sudoku_Num[x][y] == 0) || (Sudoku_Num1[x][y] != Sudoku_table[x][y] && Sudoku_Num[x][y] == 0)) {
+					al_draw_filled_rectangle(j, i, j + 75, i + 75, al_map_rgba(100, 100, 100, 0));
+				}
+				s.GotoXY(0, 13), s.SetColor(Color::Black, Color::White);
+				cout << "pos_x: " << x1 << "  " << "pos_y: " << y1 << "  " << endl;
+				pos_x = x1, pos_y = y1;
 				drawText();
 			}
 		}
-	}
 }
 
 void AllegroView::SetNum()
 {
-	for (double i = 37.5; i <= height - 75; i += 75) {
-		for (double j = 37.5; j < width - 75; j += 75)
+	for (double i = 37.5; i <= height - 75; i += 75) 
+		for (double j = 37.5; j <= width - 75; j += 75)
 		{
 			if (pos_x >= j && pos_x <= j + 75 && pos_y >= i && pos_y <= i + 75) {
 				int x1 = pos_x, y1 = pos_y;
-				pos_x = j;
-				pos_y = i;
+				pos_x = j, pos_y = i;
 				int x = pos_x / 75, y = pos_y / 75;
 				if (Sudoku_Num[x][y] == 0 && Sudoku_Num1[x][y] != Sudoku_table[x][y]) {
 					Sudoku_Num1[x][y] = Number;
+					if (Sudoku_Num1[x][y] != Sudoku_table[x][y]) {
+					//	life--;
+					//	break;
+					}
 				}
-				pos_x = x1;
-				pos_y = y1;
+				
+				pos_x = x1, pos_y = y1;
 				DrawRectangle();
 			}
 		}
-	}
 }
 
 void AllegroView::drawText()
@@ -215,6 +258,22 @@ void AllegroView::drawText()
 	}
 }
 
+void AllegroView::DrawLife()
+{
+	al_draw_filled_ellipse(721.875, 9.375, 9.375, 9.375, al_map_rgb(255, 0, 0));
+	al_draw_filled_ellipse(740.625, 9.375, 9.375, 9.375, al_map_rgb(255, 0, 0));
+	al_draw_filled_triangle(712.5, 9.375, 750, 9.375, 731.25, 37.5, al_map_rgb(255, 0, 0));
+	//if (life >= 0) {
+	//	GameSudoku s;
+	//	s.Game();//
+	//	s.Show();
+	//	Initialize(750, 750, 255, 255, 0, s.Sudoku_table);
+	//}
+	char str[2];
+	_itoa_s(life, str, 10);
+	al_draw_text(lifeFont, al_map_rgb(255, 255, 0), 726.75, 10, 0, str);
+}
+
 void AllegroView::AddNum()
 {
 	srand(time(NULL));//number
@@ -226,8 +285,7 @@ void AllegroView::AddNum()
 	int i = 0; 
 	while (i < Basic) {
 		int x, y;
-		x = rand() % 9;
-		y = rand() % 9;
+		x = rand() % 9, y = rand() % 9;
 		if (0 == Sudoku_Num[x][y]) {
 			Sudoku_Num[x][y] = Sudoku_table[x][y];
 			i++;
@@ -240,8 +298,7 @@ void AllegroView::directionMouse(ALLEGRO_EVENT& ev)
 	switch (ev.mouse.button) {
 	case 1:
 		if (37.5 <= ev.mouse.x && 37.5 <= ev.mouse.y && 712.5 >= ev.mouse.x && 712.5 >= ev.mouse.y) {
-			pos_x = ev.mouse.x;
-			pos_y = ev.mouse.y;
+			pos_x = ev.mouse.x,	pos_y = ev.mouse.y;
 			DrawRectangle();
 		}
 		break;
