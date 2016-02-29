@@ -88,33 +88,122 @@ void AllegroView::Welcome()
 {
 	ALLEGRO_EVENT ev;
 	bool done1 = true;
+	pos_x = pos_y = 0;
 	while (done1) {
 		al_wait_for_event(eventQueue, &ev);
 		if (ev.type == ALLEGRO_EVENT_TIMER && al_is_event_queue_empty(eventQueue)) al_flip_display();
-		switch (ev.keyboard.keycode) {																			
-		case ALLEGRO_KEY_ESCAPE:																				
+		switch (ev.keyboard.keycode) {
+		case ALLEGRO_KEY_ESCAPE:
 			done1 = false;
 			done = false;
-			break;																								
+			break;
 		}
-		if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {															
+		if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
 			done1 = false;
 			done = false;
-			break;																								
+			break;
 		}
 		al_set_target_bitmap(al_get_backbuffer(display));
 		al_draw_bitmap(backgroundImage, 0, 0, 0);
-		al_init_primitives_addon();
+
+		if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {//key
+			switch (ev.keyboard.keycode) {
+			case ALLEGRO_KEY_W:
+			case ALLEGRO_KEY_UP:
+				keys[UP] = true;
+				break;
+			case ALLEGRO_KEY_S:
+			case ALLEGRO_KEY_DOWN:
+				keys[DOWN] = true;
+				break;
+			case ALLEGRO_KEY_D:
+			case ALLEGRO_KEY_RIGHT:
+				keys[RIGHT] = true;
+				break;
+			case ALLEGRO_KEY_A:
+			case ALLEGRO_KEY_LEFT:
+				keys[LEFT] = true;
+				break;
+			}
+		}
+		else if (ev.type == ALLEGRO_EVENT_KEY_UP)
+		{
+			switch (ev.keyboard.keycode)
+			{
+			case ALLEGRO_KEY_W:
+			case ALLEGRO_KEY_UP:
+				keys[UP] = false;
+				break;
+			case ALLEGRO_KEY_S:
+			case ALLEGRO_KEY_DOWN:
+				keys[DOWN] = false;
+				break;
+			case ALLEGRO_KEY_D:
+			case ALLEGRO_KEY_RIGHT:
+				keys[RIGHT] = false;
+				break;
+			case ALLEGRO_KEY_A:
+			case ALLEGRO_KEY_LEFT:
+				keys[LEFT] = false;
+				break;
+			case ALLEGRO_KEY_ESCAPE:
+				done = true;
+				break;
+			}
+		}
+		else if (ev.type == ALLEGRO_EVENT_TIMER)
+		{
+			pos_y -= keys[UP] * (600 / fpsTimeout);
+			pos_y += keys[DOWN] * (600 / fpsTimeout);
+			pos_x -= keys[LEFT] * (600 / fpsTimeout);
+			pos_x += keys[RIGHT] * (600 / fpsTimeout);
+		}
+
+		if (ev.type == ALLEGRO_EVENT_MOUSE_AXES){
+			pos_x = ev.mouse.x;
+			pos_y = ev.mouse.y;
+		}
+
+		if (175 <= pos_x && 225 <= pos_y && 575 >= pos_x && 450 >= pos_y) {
+			al_init_primitives_addon();
+			if (175 <= pos_x && 225 <= pos_y && 575 >= pos_x && 300 >= pos_y) {
+				al_draw_filled_rounded_rectangle(175, 225, 575, 300, 10, 10, al_map_rgba(100, 100, 100, 0));
+			}
+			else if (175 <= pos_x && 300 <= pos_y && 575 >= pos_x && 375 >= pos_y) {
+				al_draw_filled_rounded_rectangle(175, 300, 575, 375, 10, 10, al_map_rgba(100, 100, 100, 0));
+			}
+			else if (175 <= pos_x && 375 <= pos_y && 575 >= pos_x && 450 >= pos_y) {
+				al_draw_filled_rounded_rectangle(175, 375, 575, 450, 10, 10, al_map_rgba(100, 100, 100, 0));
+			}			
+		}
+		switch (ev.mouse.button) {
+		case 1:
+			if (175 <= ev.mouse.x && 300 <= ev.mouse.y && 575 >= ev.mouse.x && 375 >= ev.mouse.y) {
+				al_draw_filled_rounded_rectangle(175, 300, 575, 375, 10, 10, al_map_rgb(0, 128, 255));
+				al_draw_text(welFont, al_map_rgb(255, 255, 255), 375, 75, ALLEGRO_ALIGN_CENTRE, "Welcome!");
+				al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 225, ALLEGRO_ALIGN_CENTRE, "Resume Game");
+				al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 300, ALLEGRO_ALIGN_CENTRE, "New Game");
+				al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 375, ALLEGRO_ALIGN_CENTRE, "Exit Game");
+				done1 = false;
+				Sleep(500);
+			}
+			if (175 <= pos_x && 375 <= pos_y && 575 >= pos_x && 450 >= pos_y) {
+				al_draw_filled_rounded_rectangle(175, 375, 575, 450, 10, 10, al_map_rgb(0, 128, 255));
+				al_draw_text(welFont, al_map_rgb(255, 255, 255), 375, 75, ALLEGRO_ALIGN_CENTRE, "Welcome!");
+				al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 225, ALLEGRO_ALIGN_CENTRE, "Resume Game");
+				al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 300, ALLEGRO_ALIGN_CENTRE, "New Game");
+				al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 375, ALLEGRO_ALIGN_CENTRE, "Exit Game");
+				done1 = false;
+				done = false;
+				Sleep(500);
+			}
+			break;
+		}
 		al_draw_text(welFont, al_map_rgb(255, 255, 255), 375, 75, ALLEGRO_ALIGN_CENTRE, "Welcome!");
 		al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 225, ALLEGRO_ALIGN_CENTRE, "Resume Game");
 		al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 300, ALLEGRO_ALIGN_CENTRE, "New Game");
 		al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 375, ALLEGRO_ALIGN_CENTRE, "Exit Game");
-		/*
-		Resume Game
-New Game
-Exit Game
-*/
-
+		al_flip_display();
 	}
 }
 void AllegroView::CoreWelcome()
@@ -131,7 +220,7 @@ void AllegroView::Game(AllegroView * Sudoku)																	///////////////////
 {																												////////////////////
 	al_start_timer(timer);																						////////////////////
 	ALLEGRO_EVENT ev;																							////////////////////
-	//Welcome();																									////////////////////
+	Welcome();																									////////////////////
 	while (done) {																								////////////////////
 		al_wait_for_event(eventQueue, &ev);																		////////////////////
 																												////////////////////
@@ -295,15 +384,16 @@ void AllegroView::AddNum()
 
 void AllegroView::directionMouse(ALLEGRO_EVENT& ev)
 {
+
 	switch (ev.mouse.button) {
 	case 1:
-		if (37.5 <= ev.mouse.x && 37.5 <= ev.mouse.y && 712.5 >= ev.mouse.x && 712.5 >= ev.mouse.y) {
+		if (37.5 <= ev.mouse.x && 37.5 <= ev.mouse.y && 712.5 >= ev.mouse.x && 712.5 >= ev.mouse.y && ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) {
 			pos_x = ev.mouse.x,	pos_y = ev.mouse.y;
 			DrawRectangle();
 		}
 		break;
 	case 2:
-		if (ev.mouse.button & 2) {
+		if (ev.mouse.button & 2 && ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) {
 			DrawSudoku();
 			al_flip_display();
 		}
