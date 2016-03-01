@@ -28,11 +28,7 @@ class AllegroView
 	int Sudoku_Num[9][9];
 	int Sudoku_Num1[9][9];
 
-	int Basic;
-	int	Easy;
-	int	Medium;
-	int	Hard;
-	int	Evil;
+	int	Level;
 
 	int Number;
 	int life;

@@ -9,11 +9,8 @@ AllegroView::AllegroView()
 
 	pos_x = pos_y = 338;
 
-	Basic = 40;
-	Easy = 30;
-	Medium = 25;
-	Hard = 22;
-	Evil = 20;
+	//Level = 5;
+	
 	Number = 0;
 	life = 5;
 }
@@ -87,7 +84,7 @@ void AllegroView::Initialize(int width, int height, int r, int g, int b, int Sud
 void AllegroView::Welcome()
 {
 	ALLEGRO_EVENT ev;
-	bool done1 = true;
+	bool done1 = true, doneLevel = false;
 	pos_x = pos_y = 0;
 	while (done1) {
 		al_wait_for_event(eventQueue, &ev);
@@ -163,7 +160,6 @@ void AllegroView::Welcome()
 			pos_x = ev.mouse.x;
 			pos_y = ev.mouse.y;
 		}
-
 		if (175 <= pos_x && 225 <= pos_y && 575 >= pos_x && 450 >= pos_y) {
 			al_init_primitives_addon();
 			if (175 <= pos_x && 225 <= pos_y && 575 >= pos_x && 300 >= pos_y) {
@@ -185,9 +181,10 @@ void AllegroView::Welcome()
 				al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 300, ALLEGRO_ALIGN_CENTRE, "New Game");
 				al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 375, ALLEGRO_ALIGN_CENTRE, "Exit Game");
 				done1 = false;
+				doneLevel = true;
 				Sleep(500);
 			}
-			if (175 <= pos_x && 375 <= pos_y && 575 >= pos_x && 450 >= pos_y) {
+			if (175 <= ev.mouse.x && 375 <= ev.mouse.y && 575 >= ev.mouse.x && 450 >= ev.mouse.y) {
 				al_draw_filled_rounded_rectangle(175, 375, 575, 450, 10, 10, al_map_rgb(0, 128, 255));
 				al_draw_text(welFont, al_map_rgb(255, 255, 255), 375, 75, ALLEGRO_ALIGN_CENTRE, "Welcome!");
 				al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 225, ALLEGRO_ALIGN_CENTRE, "Resume Game");
@@ -204,6 +201,135 @@ void AllegroView::Welcome()
 		al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 300, ALLEGRO_ALIGN_CENTRE, "New Game");
 		al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 375, ALLEGRO_ALIGN_CENTRE, "Exit Game");
 		al_flip_display();
+	}
+
+
+
+	/////////////////////////////////////////////////////////////////////////////
+	if (doneLevel == true) {
+		done1 = true;
+		while (done1)
+		{
+			al_wait_for_event(eventQueue, &ev);
+			if (ev.type == ALLEGRO_EVENT_TIMER && al_is_event_queue_empty(eventQueue)) al_flip_display();
+			switch (ev.keyboard.keycode) {
+			case ALLEGRO_KEY_ESCAPE:
+				done1 = false;
+				done = false;
+				break;
+			}
+			if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
+				done1 = false;
+				done = false;
+				break;
+			}
+			al_set_target_bitmap(al_get_backbuffer(display));
+			al_draw_bitmap(backgroundImage, 0, 0, 0);
+
+			if (ev.type == ALLEGRO_EVENT_MOUSE_AXES) {
+				pos_x = ev.mouse.x;
+				pos_y = ev.mouse.y;
+			}
+			if (175 <= pos_x && 225 <= pos_y && 575 >= pos_x && 600 >= pos_y) {
+				al_init_primitives_addon();
+				if (175 <= pos_x && 225 <= pos_y && 575 >= pos_x && 300 >= pos_y) {
+					al_draw_filled_rounded_rectangle(175, 225, 575, 300, 10, 10, al_map_rgba(100, 100, 100, 0));
+				}
+				else if (175 <= pos_x && 300 <= pos_y && 575 >= pos_x && 375 >= pos_y) {
+					al_draw_filled_rounded_rectangle(175, 300, 575, 375, 10, 10, al_map_rgba(100, 100, 100, 0));
+				}
+				else if (175 <= pos_x && 375 <= pos_y && 575 >= pos_x && 450 >= pos_y) {
+					al_draw_filled_rounded_rectangle(175, 375, 575, 450, 10, 10, al_map_rgba(100, 100, 100, 0));
+				}
+				else if (175 <= pos_x && 450 <= pos_y && 575 >= pos_x && 525 >= pos_y) {
+					al_draw_filled_rounded_rectangle(175, 450, 575, 525, 10, 10, al_map_rgba(100, 100, 100, 0));
+				}
+				else if (175 <= pos_x && 525 <= pos_y && 575 >= pos_x && 600 >= pos_y) {
+					al_draw_filled_rounded_rectangle(175, 525, 575, 600, 10, 10, al_map_rgba(100, 100, 100, 0));
+				}
+			}
+
+
+			switch (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) {
+			case 1:
+				if (175 <= ev.mouse.x && 225 <= ev.mouse.y && 575 >= ev.mouse.x && 300 >= ev.mouse.y) {
+					al_draw_filled_rounded_rectangle(175, 225, 575, 300, 10, 10, al_map_rgb(0, 128, 255));
+					al_draw_text(welFont, al_map_rgb(255, 255, 255), 375, 75, ALLEGRO_ALIGN_CENTRE, "Level");
+					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 225, ALLEGRO_ALIGN_CENTRE, "Basic");
+					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 300, ALLEGRO_ALIGN_CENTRE, "Easy");
+					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 375, ALLEGRO_ALIGN_CENTRE, "Medium");
+					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 450, ALLEGRO_ALIGN_CENTRE, "Hard");
+					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 525, ALLEGRO_ALIGN_CENTRE, "Evil");
+					done1 = false;
+					Level = 40;
+					Sleep(500);
+					break;
+				}
+				if (175 <= ev.mouse.x && 300 <= ev.mouse.y && 575 >= ev.mouse.x && 375 >= ev.mouse.y) {
+					al_draw_filled_rounded_rectangle(175, 300, 575, 375, 10, 10, al_map_rgb(0, 128, 255));
+					al_draw_text(welFont, al_map_rgb(255, 255, 255), 375, 75, ALLEGRO_ALIGN_CENTRE, "Level");
+					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 225, ALLEGRO_ALIGN_CENTRE, "Basic");
+					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 300, ALLEGRO_ALIGN_CENTRE, "Easy");
+					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 375, ALLEGRO_ALIGN_CENTRE, "Medium");
+					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 450, ALLEGRO_ALIGN_CENTRE, "Hard");
+					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 525, ALLEGRO_ALIGN_CENTRE, "Evil");
+					done1 = false;
+					Level = 30;
+					Sleep(500);
+				}
+				if (175 <= ev.mouse.x && 375 <= ev.mouse.y && 575 >= ev.mouse.x && 450 >= ev.mouse.y) {
+					al_draw_filled_rounded_rectangle(175, 375, 575, 450, 10, 10, al_map_rgb(0, 128, 255));
+					al_draw_text(welFont, al_map_rgb(255, 255, 255), 375, 75, ALLEGRO_ALIGN_CENTRE, "Level");
+					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 225, ALLEGRO_ALIGN_CENTRE, "Basic");
+					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 300, ALLEGRO_ALIGN_CENTRE, "Easy");
+					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 375, ALLEGRO_ALIGN_CENTRE, "Medium");
+					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 450, ALLEGRO_ALIGN_CENTRE, "Hard");
+					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 525, ALLEGRO_ALIGN_CENTRE, "Evil");
+					done1 = false;
+					Level = 25;
+					Sleep(500);
+				}
+				if (175 <= ev.mouse.x && 450 <= ev.mouse.y && 575 >= ev.mouse.x && 525 >= ev.mouse.y) {
+					al_draw_filled_rounded_rectangle(175, 450, 575, 525, 10, 10, al_map_rgb(0, 128, 255));
+					al_draw_text(welFont, al_map_rgb(255, 255, 255), 375, 75, ALLEGRO_ALIGN_CENTRE, "Level");
+					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 225, ALLEGRO_ALIGN_CENTRE, "Basic");
+					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 300, ALLEGRO_ALIGN_CENTRE, "Easy");
+					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 375, ALLEGRO_ALIGN_CENTRE, "Medium");
+					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 450, ALLEGRO_ALIGN_CENTRE, "Hard");
+					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 525, ALLEGRO_ALIGN_CENTRE, "Evil");
+					done1 = false;
+					Level = 22;
+					Sleep(500);
+				}
+				if (175 <= ev.mouse.x && 525 <= ev.mouse.y && 575 >= ev.mouse.x && 600 >= ev.mouse.y) {
+					al_draw_filled_rounded_rectangle(175, 525, 575, 600, 10, 10, al_map_rgb(0, 128, 255));
+					al_draw_text(welFont, al_map_rgb(255, 255, 255), 375, 75, ALLEGRO_ALIGN_CENTRE, "Level");
+					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 225, ALLEGRO_ALIGN_CENTRE, "Basic");
+					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 300, ALLEGRO_ALIGN_CENTRE, "Easy");
+					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 375, ALLEGRO_ALIGN_CENTRE, "Medium");
+					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 450, ALLEGRO_ALIGN_CENTRE, "Hard");
+					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 525, ALLEGRO_ALIGN_CENTRE, "Evil");
+					done1 = false;
+					Level = 20;
+					Sleep(500);
+				}
+				break;
+			}
+			this->Level = Level;
+			al_draw_text(welFont, al_map_rgb(255, 255, 255), 375, 75, ALLEGRO_ALIGN_CENTRE, "Level");
+			al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 225, ALLEGRO_ALIGN_CENTRE, "Basic");
+			al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 300, ALLEGRO_ALIGN_CENTRE, "Easy");
+			al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 375, ALLEGRO_ALIGN_CENTRE, "Medium");
+			al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 450, ALLEGRO_ALIGN_CENTRE, "Hard");
+			al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 525, ALLEGRO_ALIGN_CENTRE, "Evil");
+			/*Basic = 40;
+			Easy = 30;
+			Medium = 25;
+			Hard = 22;
+			Evil = 20;*/
+			al_flip_display();
+		}
+		doneLevel = false;
 	}
 }
 void AllegroView::CoreWelcome()
@@ -372,7 +498,7 @@ void AllegroView::AddNum()
 			Sudoku_Num1[x][y] = 0;
 		}
 	int i = 0; 
-	while (i < Basic) {
+	while (i < Level) {
 		int x, y;
 		x = rand() % 9, y = rand() % 9;
 		if (0 == Sudoku_Num[x][y]) {
