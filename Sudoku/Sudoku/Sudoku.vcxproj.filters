@@ -33,6 +33,15 @@
     <ClCompile Include="ConsoleView.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="Draw.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Welcome.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="CurrentDirrection.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h">
@@ -52,6 +61,15 @@
     </ClInclude>
     <ClInclude Include="Enumerations.h">
       <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Welcome.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="CurrentDirrection.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
