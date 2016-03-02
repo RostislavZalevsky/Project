@@ -3,6 +3,7 @@
 #include "Header.h"
 #include "GameSudoku.h"
 #include "ConsoleView.h"
+#include "Enumerations.h"
 
 class AllegroView
 {
@@ -33,7 +34,6 @@ class AllegroView
 	int Number;
 	int life;
 
-	Console s;
 public:
 	AllegroView();
 	void Initialize(int width, int height, int r, int g, int b, int Sudoku_table[9][9]);

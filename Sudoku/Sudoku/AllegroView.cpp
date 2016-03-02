@@ -6,11 +6,7 @@ AllegroView::AllegroView()
 	fpsTimeout = 200;
 
 	draw = done = true;
-
 	pos_x = pos_y = 338;
-
-	//Level = 5;
-	
 	Number = 0;
 	life = 5;
 }
@@ -33,26 +29,26 @@ void AllegroView::Initialize(int width, int height, int r, int g, int b, int Sud
 	if (display == nullptr) {
 		throw "Display creation error!";//throw 1;
 	}
-
+	//////////////////////////////////////////////////////////////////////
 	if (!al_install_keyboard()) {
 		throw "Tnstall keyboard error!";
 	}
-
+	//////////////////////////////////////////////////////////////////////
 	timer = al_create_timer(1.0 / fpsTimeout);
 	if (timer == nullptr) {
 		throw "Timer creation error!";
 	}
-
+	//////////////////////////////////////////////////////////////////////
 	eventQueue = al_create_event_queue();
 	if (eventQueue == nullptr) {
 		throw "Event queue creation error!";
 	}
-
+	//////////////////////////////////////////////////////////////////////
 	backgroundImage = al_load_bitmap("Resources/Images/Sud_img.jpg");
 	if (backgroundImage == nullptr) {
 		throw "Load image error!";
 	}
-
+	//////////////////////////////////////////////////////////////////////
 	if (!al_init_font_addon()) {
 		throw "Font init error!";
 	}
@@ -60,24 +56,18 @@ void AllegroView::Initialize(int width, int height, int r, int g, int b, int Sud
 		throw "TTF init error!";
 	}
 
-	AddNum();
-
 	mainFont = al_load_font("Resources/Fonts/AdobeFanHeitiStd-Bold.otf", 75, 0);
 	lifeFont = al_load_font("Resources/Fonts/AdobeFanHeitiStd-Bold.otf", 18.75, 0);
 	welFont = al_load_font("Resources/Fonts/HARLOWSI.ttf", 100, 0);
 	wel1Font = al_load_font("Resources/Fonts/comicz.ttf", 50, 0);
-	
 	//al_set_target_bitmap(al_get_backbuffer(display));
 	backgroundColor.r = r, backgroundColor.g = g, backgroundColor.b = b, backgroundColor.a = 0;
-
-	DrawSudoku();//eventQueue = al_create_event_queue();
-
+	//DrawSudoku();//eventQueue = al_create_event_queue();
 	al_install_mouse();//mouse
 	eventQueue = al_create_event_queue();
 
-	al_register_event_source(eventQueue, al_get_timer_event_source(timer));	//timer		//al_clear_to_color(al_map_rgb(r, g, b));//al_flip_display();//al_rest(5);
+	al_register_event_source(eventQueue, al_get_timer_event_source(timer));	//timer		//al_clear_to_color(al_map_rgb(r, g, b));//al_flip_display();//al_rest(5);///// for( while )
 	al_register_event_source(eventQueue, al_get_display_event_source(display));//display
-
 	al_register_event_source(eventQueue, al_get_keyboard_event_source());//keyboard
 	al_register_event_source(eventQueue, al_get_mouse_event_source());//mouse
 }
@@ -261,7 +251,8 @@ void AllegroView::Welcome()
 					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 450, ALLEGRO_ALIGN_CENTRE, "Hard");
 					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 525, ALLEGRO_ALIGN_CENTRE, "Evil");
 					done1 = false;
-					Level = 40;
+					this->Level = 40;
+					AddNum();
 					Sleep(500);
 					break;
 				}
@@ -274,7 +265,8 @@ void AllegroView::Welcome()
 					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 450, ALLEGRO_ALIGN_CENTRE, "Hard");
 					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 525, ALLEGRO_ALIGN_CENTRE, "Evil");
 					done1 = false;
-					Level = 30;
+					this->Level = 30;
+					AddNum();
 					Sleep(500);
 				}
 				if (175 <= ev.mouse.x && 375 <= ev.mouse.y && 575 >= ev.mouse.x && 450 >= ev.mouse.y) {
@@ -286,7 +278,8 @@ void AllegroView::Welcome()
 					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 450, ALLEGRO_ALIGN_CENTRE, "Hard");
 					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 525, ALLEGRO_ALIGN_CENTRE, "Evil");
 					done1 = false;
-					Level = 25;
+					this->Level = 25;
+					AddNum();
 					Sleep(500);
 				}
 				if (175 <= ev.mouse.x && 450 <= ev.mouse.y && 575 >= ev.mouse.x && 525 >= ev.mouse.y) {
@@ -298,7 +291,8 @@ void AllegroView::Welcome()
 					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 450, ALLEGRO_ALIGN_CENTRE, "Hard");
 					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 525, ALLEGRO_ALIGN_CENTRE, "Evil");
 					done1 = false;
-					Level = 22;
+					this->Level = 22;
+					AddNum();
 					Sleep(500);
 				}
 				if (175 <= ev.mouse.x && 525 <= ev.mouse.y && 575 >= ev.mouse.x && 600 >= ev.mouse.y) {
@@ -310,7 +304,8 @@ void AllegroView::Welcome()
 					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 450, ALLEGRO_ALIGN_CENTRE, "Hard");
 					al_draw_text(wel1Font, al_map_rgb(255, 255, 255), 375, 525, ALLEGRO_ALIGN_CENTRE, "Evil");
 					done1 = false;
-					Level = 20;
+					this->Level = 20;
+					AddNum();
 					Sleep(500);
 				}
 				break;
@@ -399,6 +394,7 @@ void AllegroView::DrawSudoku()
 
 void AllegroView::DrawRectangle()
 {
+	Console _console;
 	for (double i = 37.5; i < height - 37.5; i += 75)
 		for (double j = 37.5; j < width - 37.5; j += 75)
 		{
@@ -406,7 +402,7 @@ void AllegroView::DrawRectangle()
 				int x1 = pos_x, y1 = pos_y;
 				pos_x = j, pos_y = i;
 				int x = (pos_x + 37.5) / 75, y = (pos_y + 37.5) / 75;
-				s.GotoXY(0, 14);cout << "[" << x << "]" << " " << "[" << y << "]";
+				_console.GotoXY(0, 14);cout << "[" << x << "]" << " " << "[" << y << "]";
 				DrawSudoku(); //al_hide_mouse_cursor(display);
 				for (double i = 37.5; i < height - 37.5; i += 75) {
 					for (double j = 37.5; j < width - 37.5; j += 75) {
@@ -419,7 +415,7 @@ void AllegroView::DrawRectangle()
 				if ((Sudoku_Num1[x][y] == 0 && Sudoku_Num[x][y] == 0) || (Sudoku_Num1[x][y] != Sudoku_table[x][y] && Sudoku_Num[x][y] == 0)) {
 					al_draw_filled_rectangle(j, i, j + 75, i + 75, al_map_rgba(100, 100, 100, 0));
 				}
-				s.GotoXY(0, 13), s.SetColor(Color::Black, Color::White);
+				_console.GotoXY(0, 13), _console.SetColor(Color::Black, Color::White);
 				cout << "pos_x: " << x1 << "  " << "pos_y: " << y1 << "  " << endl;
 				pos_x = x1, pos_y = y1;
 				drawText();

@@ -31,15 +31,12 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="ConsoleView.cpp">
-      <Filter>Заголовочные файлы</Filter>
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h">
       <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="AllegroHeader.h">
-      <Filter>View</Filter>
     </ClInclude>
     <ClInclude Include="AllegroView.h">
       <Filter>View</Filter>
@@ -48,6 +45,12 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="ConsoleView.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="AllegroHeader.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="Enumerations.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>
